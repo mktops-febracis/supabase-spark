@@ -7,6 +7,8 @@ import { ExportPanel } from "./ExportPanel";
 import { CloudPresets } from "./CloudPresets";
 import { AdminUsers } from "@/components/auth/AdminUsers";
 import { useAuth } from "@/lib/auth";
+import { useTheme } from "@/lib/theme";
+import { Moon, Sun } from "lucide-react";
 import {
   CDN_KEY,
   STORAGE_KEY,
@@ -51,6 +53,7 @@ export function EmailEditor() {
   });
 
   const { session, signOut } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
 
   const preset: Preset = useMemo(
     () => ({ name, global: globalValues, blocks: stripIds(blocks) }),
@@ -131,6 +134,23 @@ export function EmailEditor() {
     setSelectedUid(withUids[0]?._uid ?? null);
   }
 
+  function startBlank() {
+    if (
+      blocks.length > 0 &&
+      !confirm("Começar um e-mail em branco? Isso substitui o e-mail atual.")
+    ) {
+      return;
+    }
+    const g: Record<string, string> = {};
+    for (const f of registry.global) {
+      if (typeof f.default === "string") g[f.key] = f.default;
+    }
+    setName("Novo e-mail");
+    setGlobalValues(g);
+    setBlocks([]);
+    setSelectedUid(null);
+  }
+
   function savePresetToFile() {
     const blob = new Blob([JSON.stringify(preset, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -177,6 +197,13 @@ export function EmailEditor() {
         <div className="flex shrink-0 flex-wrap gap-2">
           <button
             type="button"
+            onClick={startBlank}
+            className="rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+          >
+            Começar em branco
+          </button>
+          <button
+            type="button"
             onClick={loadCisPreset}
             className="rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
           >
@@ -212,6 +239,16 @@ export function EmailEditor() {
           <CloudPresets preset={preset} onLoad={applyPreset} />
           <AdminUsers />
 
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={theme === "dark" ? "Mudar para tema claro" : "Mudar para tema escuro (black)"}
+            aria-label={theme === "dark" ? "Mudar para tema claro" : "Mudar para tema escuro"}
+            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-2.5 py-1.5 hover:bg-accent"
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+
           {session && (
             <span className="flex items-center gap-2 self-center pl-1">
               <span className="hidden max-w-[160px] truncate text-[11px] text-muted-foreground sm:inline">
@@ -233,9 +270,13 @@ export function EmailEditor() {
       <div className="grid flex-1 grid-cols-1 gap-4 p-4 lg:grid-cols-[280px_minmax(0,1fr)_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,420px)_minmax(0,1fr)]">
         {/* Left */}
         <aside className="min-w-0 rounded-lg border border-border bg-card p-3">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <h2 className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Estrutura
           </h2>
+          <p className="mb-3 text-[11px] leading-snug text-muted-foreground">
+            Monte qualquer layout: adicione, arraste e edite blocos. Use{" "}
+            <span className="font-medium">Começar em branco</span> para um e-mail novo do zero.
+          </p>
           <BlockList
             blocks={blocks}
             selectedUid={selectedUid}

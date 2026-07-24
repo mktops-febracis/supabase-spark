@@ -1,3 +1,4 @@
+// Rota raiz: Editor Composável (Elementor) — único editor do app.
 import { createFileRoute } from "@tanstack/react-router";
 import { EditorShell } from "@/components/editor/EditorShell";
 import { AuthGate } from "@/components/auth/AuthGate";

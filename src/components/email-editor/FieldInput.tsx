@@ -1,6 +1,9 @@
+import { useRef, useState, type ReactNode } from "react";
 import type { Field, Slot } from "@/lib/engine";
 import { registry } from "./types";
 import { RichHtmlInput } from "./RichHtmlInput";
+import { isSupabaseConfigured } from "@/lib/supabase";
+import { uploadImage } from "@/lib/cloud";
 
 interface Props {
   field: Field;
@@ -104,33 +107,13 @@ export function FieldInput({ field, value, onChange, slot }: Props) {
       );
     case "image":
       return (
-        <div>
-          {label}
-          <input
-            type="url"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="https://... ou __CDN__arquivo.png"
-            className={inputBase + " font-mono text-xs"}
-          />
-          {slot && (
-            <p className="mt-1 text-[10px] text-muted-foreground">
-              Dimensão recomendada: {slot.recommended}
-            </p>
-          )}
-          {value && (
-            <div className="mt-2 overflow-hidden rounded border border-border bg-muted/30 p-2">
-              <img
-                src={value}
-                alt=""
-                className="max-h-24 w-auto object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
-            </div>
-          )}
-        </div>
+        <ImageField
+          label={label}
+          value={value}
+          onChange={onChange}
+          slot={slot}
+          inputBase={inputBase}
+        />
       );
     case "text":
     default:
@@ -146,4 +129,88 @@ export function FieldInput({ field, value, onChange, slot }: Props) {
         </div>
       );
   }
+}
+
+interface ImageFieldProps {
+  label: ReactNode;
+  value: string;
+  onChange: (v: string) => void;
+  slot?: Slot;
+  inputBase: string;
+}
+
+function ImageField({ label, value, onChange, slot, inputBase }: ImageFieldProps) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleFile(file: File) {
+    setUploading(true);
+    setError(null);
+    try {
+      const url = await uploadImage(file);
+      onChange(url);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div>
+      {label}
+      <input
+        type="url"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="https://... ou __CDN__arquivo.png"
+        className={inputBase + " font-mono text-xs"}
+      />
+      {isSupabaseConfigured && (
+        <div className="mt-1 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="rounded-md border border-input bg-background px-2 py-1 text-[11px] font-medium hover:bg-accent disabled:opacity-60"
+          >
+            {uploading ? "Enviando…" : "Enviar imagem"}
+          </button>
+          <span className="text-[10px] text-muted-foreground">
+            sobe pro Storage e usa a URL pública
+          </span>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleFile(f);
+              e.target.value = "";
+            }}
+          />
+        </div>
+      )}
+      {error && <p className="mt-1 text-[10px] text-destructive">{error}</p>}
+      {slot && (
+        <p className="mt-1 text-[10px] text-muted-foreground">
+          Dimensão recomendada: {slot.recommended}
+        </p>
+      )}
+      {value && (
+        <div className="mt-2 overflow-hidden rounded border border-border bg-muted/30 p-2">
+          <img
+            src={value}
+            alt=""
+            className="max-h-24 w-auto object-contain"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
 }

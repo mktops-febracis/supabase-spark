@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { serialize, validate, type Preset } from "@/lib/engine";
 import type { ExportMode } from "./types";
 import { CDN_KEY } from "./types";
+import { isSupabaseConfigured } from "@/lib/supabase";
+import { saveExport } from "@/lib/cloud";
 
 interface Props {
   preset: Preset;
@@ -12,6 +14,21 @@ interface Props {
 export function ExportPanel({ preset, cdnBase, onCdnChange }: Props) {
   const [mode, setMode] = useState<ExportMode>("content_builder");
   const [copied, setCopied] = useState(false);
+  const [savingExport, setSavingExport] = useState(false);
+  const [savedExport, setSavedExport] = useState(false);
+
+  async function saveToCloud() {
+    setSavingExport(true);
+    try {
+      await saveExport(preset.name || "email", mode, html);
+      setSavedExport(true);
+      setTimeout(() => setSavedExport(false), 1500);
+    } catch (e) {
+      window.alert("Falha ao salvar exportação: " + (e as Error).message);
+    } finally {
+      setSavingExport(false);
+    }
+  }
 
   const html = useMemo(
     () => serialize(preset, mode, cdnBase),
@@ -113,6 +130,16 @@ export function ExportPanel({ preset, cdnBase, onCdnChange }: Props) {
           >
             {copied ? "Copiado!" : "Copiar HTML"}
           </button>
+          {isSupabaseConfigured && (
+            <button
+              type="button"
+              onClick={saveToCloud}
+              disabled={savingExport}
+              className="rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent disabled:opacity-60"
+            >
+              {savingExport ? "Salvando…" : savedExport ? "Salvo!" : "Salvar exportação na nuvem"}
+            </button>
+          )}
         </div>
 
         <div className="rounded-md border border-border bg-muted/30 p-3">

@@ -4,6 +4,8 @@ import { BlockList } from "./BlockList";
 import { BlockEditor } from "./BlockEditor";
 import { Preview } from "./Preview";
 import { ExportPanel } from "./ExportPanel";
+import { CloudPresets } from "./CloudPresets";
+import { useAuth } from "@/lib/auth";
 import {
   CDN_KEY,
   STORAGE_KEY,
@@ -47,10 +49,20 @@ export function EmailEditor() {
     }
   });
 
+  const { session, signOut } = useAuth();
+
   const preset: Preset = useMemo(
     () => ({ name, global: globalValues, blocks: stripIds(blocks) }),
     [name, globalValues, blocks],
   );
+
+  function applyPreset(parsed: Preset) {
+    setName(parsed.name);
+    setGlobalValues({ ...parsed.global });
+    const withUids = withIds(parsed);
+    setBlocks(withUids);
+    setSelectedUid(withUids[0]?._uid ?? null);
+  }
 
   // Autosave to localStorage.
   useEffect(() => {
@@ -194,6 +206,24 @@ export function EmailEditor() {
               e.target.value = "";
             }}
           />
+
+          <span className="mx-1 h-6 w-px self-center bg-border" />
+          <CloudPresets preset={preset} onLoad={applyPreset} />
+
+          {session && (
+            <span className="flex items-center gap-2 self-center pl-1">
+              <span className="hidden max-w-[160px] truncate text-[11px] text-muted-foreground sm:inline">
+                {session.user.email}
+              </span>
+              <button
+                type="button"
+                onClick={() => signOut()}
+                className="rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+              >
+                Sair
+              </button>
+            </span>
+          )}
         </div>
       </header>
 

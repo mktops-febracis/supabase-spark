@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { EmailEditor } from "@/components/email-editor/EmailEditor";
+import { AuthGate } from "@/components/auth/AuthGate";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,5 +25,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  return <EmailEditor />;
+  return (
+    <AuthGate>
+      <EmailEditor />
+    </AuthGate>
+  );
 }

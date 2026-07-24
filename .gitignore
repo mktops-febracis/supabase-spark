@@ -10,6 +10,12 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+
+# Env (segredos — nunca versionar; use .env.example como modelo)
+.env
+.env.*
+!.env.example
+
 .output
 .vinxi
 .tanstack/**

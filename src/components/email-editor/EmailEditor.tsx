@@ -8,7 +8,8 @@ import { CloudPresets } from "./CloudPresets";
 import { AdminUsers } from "@/components/auth/AdminUsers";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, LayoutTemplate } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import {
   CDN_KEY,
   STORAGE_KEY,
@@ -234,6 +235,13 @@ export function EmailEditor() {
               e.target.value = "";
             }}
           />
+
+          <Link
+            to="/editor"
+            className="inline-flex items-center gap-1 rounded-md border border-primary/40 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/10"
+          >
+            <LayoutTemplate className="h-3.5 w-3.5" /> Editor composável (beta)
+          </Link>
 
           <span className="mx-1 h-6 w-px self-center bg-border" />
           <CloudPresets preset={preset} onLoad={applyPreset} />

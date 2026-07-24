@@ -1,0 +1,124 @@
+{
+  "name": "CIS Online - O padrão invisível",
+  "global": {
+    "email_title": "O padrão invisível que segura a sua vida",
+    "body_bg": "#FFFFFF",
+    "preheader": "Existe um padrão invisível se repetindo na sua vida. 3 dias ao vivo com Paulo Vieira para romper com ele."
+  },
+  "blocks": [
+    {
+      "type": "hero",
+      "values": {
+        "hero_bg": "#0006B3",
+        "hero_bg_img": "__CDN__cis-hero-bg.png",
+        "logo_src": "https://image.email360.febracis.com.br/lib/fe3a15717564047b751178/m/1/9ac79cff-d31a-4c40-aadb-4bf4f557b56b.png",
+        "logo_w": "232",
+        "logo_alt": "Método CIS Online",
+        "hero_h1_color": "#FFFFFF",
+        "hero_h1": "O padrão invisível que<br />segura a sua vida",
+        "hero_sub_color": "#DFE0F5",
+        "hero_sub": "Rompa o padrão. Viva o <span style=\"color:#FFD900;font-weight:700;\">CIS Online</span>, ao<br />vivo com Paulo Vieira.",
+        "hero_arrow_color": "#FFFFFF"
+      }
+    },
+    {
+      "type": "cta",
+      "values": {
+        "cta_bg": "#0006B3",
+        "cta_split_img": "__CDN__cis-btn-split.png",
+        "cta_link": "#URL_CHECKOUT",
+        "cta_btn_bg": "#FFC400",
+        "cta_btn_color": "#000000",
+        "cta_text": "QUERO VIVER O CIS ONLINE"
+      }
+    },
+    {
+      "type": "list-check",
+      "values": {
+        "palco_src": "https://placehold.co/468x514/DDDDDD/888888?text=FOTO+PALCO",
+        "palco_alt": "Paulo Vieira no palco do CIS Online",
+        "lc_heading_color": "#2D2D2D",
+        "lc_heading": "Por que a mesma cena <span style=\"color:#FF0000;\">se repete?</span>",
+        "lc_icon_bg": "#FF0000",
+        "bullet_1": "Decisões que não te levam pra frente.",
+        "bullet_2": "Relações que voltam ao mesmo conflito.",
+        "bullet_3": "Resultados que não se sustentam."
+      }
+    },
+    {
+      "type": "heading",
+      "values": {
+        "heading_pad": "36px 48px 40px 48px",
+        "heading_size": "23",
+        "heading_lh": "30",
+        "heading_color": "#2D2D2D",
+        "heading_text": "A raiz tem solução."
+      }
+    },
+    {
+      "type": "pillars",
+      "values": {
+        "icone_1_src": "https://placehold.co/148x148/D9D9D9/0006B3?text=1",
+        "pilar_1_title": "3 dias ao vivo",
+        "pilar_1_desc": "Imersão prática com o Paulo Vieira, direto na sua rotina.",
+        "icone_2_src": "https://placehold.co/148x148/D9D9D9/0006B3?text=2",
+        "pilar_2_title": "Plataforma exclusiva",
+        "pilar_2_desc": "Conteúdo digital pra rever e aplicar sempre.",
+        "icone_3_src": "https://placehold.co/148x148/D9D9D9/0006B3?text=3",
+        "pilar_3_title": "Análise de perfil",
+        "pilar_3_desc": "Clareza sobre os padrões que te limitam."
+      }
+    },
+    {
+      "type": "social-proof",
+      "values": {
+        "sp_card_bg": "#000FAE",
+        "sp_number": "+1,8 milhão",
+        "sp_number_color": "#FFC400",
+        "sp_text": "de pessoas em mais de<br />100 países já romperam<br />esse padrão.",
+        "publico_src": "https://placehold.co/504x336/CCCCCC/777777?text=FOTO+PUBLICO",
+        "publico_alt": "Participantes do CIS Online"
+      }
+    },
+    {
+      "type": "payment",
+      "values": {
+        "pay_heading_color": "#2D2D2D",
+        "pay_heading": "Escolha como garantir sua vaga",
+        "pay_card_bg": "#EFEFEF",
+        "pay_title_color": "#0F0094",
+        "pay_left_title": "Cartão de crédito",
+        "pay_left_desc": "Pagamento seguro e rápido.",
+        "pay_left_btn": "PAGAR NO CARTÃO",
+        "pay_left_link": "#URL_CHECKOUT_CARTAO",
+        "pay_left_btn_bg": "#FFC400",
+        "pay_left_btn_color": "#000000",
+        "pay_right_title": "Boleto bancário",
+        "pay_right_desc": "Mais flexibilidade pra você.",
+        "pay_right_btn": "PAGAR NO BOLETO",
+        "pay_right_link": "#URL_CHECKOUT_BOLETO",
+        "pay_right_btn_bg": "#2440FF",
+        "pay_right_btn_color": "#FFFFFF"
+      }
+    },
+    {
+      "type": "whatsapp",
+      "values": {
+        "wa_bar_bg": "#F1F1F1",
+        "zap_src": "https://placehold.co/64x64/F1F1F1/3C3C3C?text=W",
+        "wa_before": "Prefere tirar dúvidas antes?",
+        "wa_link": "#URL_WHATSAPP",
+        "wa_link_text": "Fale com um especialista no WhatsApp",
+        "wa_after": "."
+      }
+    },
+    {
+      "type": "signature",
+      "values": {
+        "sig_greeting": "Um abraço,",
+        "sig_name": "Paulo Vieira",
+        "sig_phrase": "A mudança começa quando a desculpa termina."
+      }
+    }
+  ]
+}

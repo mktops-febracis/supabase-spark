@@ -1,0 +1,54 @@
+    <!-- BLOCK:payment -->
+    <tr>
+      <td align="center" class="pad-x" style="padding:0 48px 25px 48px;">
+        <h2 class="h3" style="margin:0;font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:22px;line-height:29px;font-weight:700;color:{{pay_heading_color}};text-align:center;">
+          {{pay_heading}}
+        </h2>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="pad-x" align="center" style="padding:0 48px 49px 48px;font-size:0;">
+
+        <!--[if mso]><table role="presentation" width="504" cellpadding="0" cellspacing="0" border="0"><tr><td width="242" valign="top"><![endif]-->
+        <div class="stack stack-mb" style="display:inline-block;width:100%;max-width:242px;vertical-align:top;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="{{pay_card_bg}}" style="background-color:{{pay_card_bg}};border-radius:12px;">
+            <tr>
+              <td align="center" style="padding:28px 16px 30px 16px;">
+                <p style="margin:0 0 6px 0;font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:17px;line-height:23px;font-weight:700;color:{{pay_title_color}};">{{pay_left_title}}</p>
+                <p style="margin:0 0 20px 0;font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:12px;line-height:17px;color:#000000;">{{pay_left_desc}}</p>
+                <!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{pay_left_link}}" style="height:36px;v-text-anchor:middle;width:183px;" arcsize="50%" stroke="f" fillcolor="{{pay_left_btn_bg}}">
+                  <w:anchorlock/><center style="color:{{pay_left_btn_color}};font-family:Arial,sans-serif;font-size:12px;font-weight:bold;">{{pay_left_btn}}</center>
+                </v:roundrect>
+                <![endif]-->
+                <!--[if !mso]><!-- -->
+                <a href="{{pay_left_link}}" style="display:inline-block;width:183px;background-color:{{pay_left_btn_bg}};color:{{pay_left_btn_color}};font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;font-weight:700;letter-spacing:0.3px;text-align:center;padding:10px 0;border-radius:18px;">{{pay_left_btn}}</a>
+                <!--<![endif]-->
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!--[if mso]></td><td width="20">&nbsp;</td><td width="242" valign="top"><![endif]-->
+
+        <div class="stack" style="display:inline-block;width:100%;max-width:242px;vertical-align:top;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="{{pay_card_bg}}" style="background-color:{{pay_card_bg}};border-radius:12px;">
+            <tr>
+              <td align="center" style="padding:28px 16px 30px 16px;">
+                <p style="margin:0 0 6px 0;font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:17px;line-height:23px;font-weight:700;color:{{pay_title_color}};">{{pay_right_title}}</p>
+                <p style="margin:0 0 20px 0;font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:12px;line-height:17px;color:#000000;">{{pay_right_desc}}</p>
+                <!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{pay_right_link}}" style="height:36px;v-text-anchor:middle;width:183px;" arcsize="50%" stroke="f" fillcolor="{{pay_right_btn_bg}}">
+                  <w:anchorlock/><center style="color:{{pay_right_btn_color}};font-family:Arial,sans-serif;font-size:12px;font-weight:bold;">{{pay_right_btn}}</center>
+                </v:roundrect>
+                <![endif]-->
+                <!--[if !mso]><!-- -->
+                <a href="{{pay_right_link}}" style="display:inline-block;width:183px;background-color:{{pay_right_btn_bg}};color:{{pay_right_btn_color}};font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;font-weight:700;letter-spacing:0.3px;text-align:center;padding:10px 0;border-radius:18px;">{{pay_right_btn}}</a>
+                <!--<![endif]-->
+              </td>
+            </tr>
+          </table>
+        </div>
+        <!--[if mso]></td></tr></table><![endif]-->
+      </td>
+    </tr>

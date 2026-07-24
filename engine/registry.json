@@ -1,0 +1,144 @@
+{
+  "_comment": "Metadados dos blocos para a UI auto-gerar formulários. type: text|textarea|richhtml|color|image|link|number|select. 'richhtml' = token {{{...}}} (aceita <b>/<span cor>/<br>). image => slot arrastável no Content Builder.",
+  "palette": {
+    "azul": "#0006B3",
+    "azul_card": "#000FAE",
+    "dourado": "#FFC400",
+    "titulo": "#2D2D2D",
+    "vermelho": "#FF0000",
+    "boleto": "#2440FF",
+    "titulo_card_pgto": "#0F0094",
+    "card_pgto": "#EFEFEF",
+    "circulo_icone": "#D9D9D9"
+  },
+  "global": [
+    { "key": "email_title", "label": "Título (aba do navegador)", "type": "text" },
+    { "key": "body_bg", "label": "Cor de fundo do e-mail", "type": "color", "default": "#FFFFFF" },
+    { "key": "preheader", "label": "Preheader (prévia na caixa de entrada)", "type": "textarea" }
+  ],
+  "blocks": {
+    "hero": {
+      "label": "Hero (topo azul)", "category": "topo",
+      "slots": [{ "key": "slot_logo", "recommended": "480x140 (2x)" }],
+      "fields": [
+        { "key": "hero_bg", "label": "Cor de fundo", "type": "color", "default": "#0006B3" },
+        { "key": "hero_bg_img", "label": "Textura de fundo (CDN)", "type": "text", "default": "__CDN__cis-hero-bg.png" },
+        { "key": "logo_src", "label": "Logo", "type": "image" },
+        { "key": "logo_w", "label": "Largura do logo (px)", "type": "number", "default": "232" },
+        { "key": "logo_alt", "label": "Texto alternativo do logo", "type": "text" },
+        { "key": "hero_h1", "label": "Título principal", "type": "richhtml" },
+        { "key": "hero_h1_color", "label": "Cor do título", "type": "color", "default": "#FFFFFF" },
+        { "key": "hero_sub", "label": "Subtítulo", "type": "richhtml" },
+        { "key": "hero_sub_color", "label": "Cor do subtítulo", "type": "color", "default": "#DFE0F5" },
+        { "key": "hero_arrow_color", "label": "Cor da seta", "type": "color", "default": "#FFFFFF" }
+      ]
+    },
+    "cta": {
+      "label": "Botão principal (CTA)", "category": "conversao",
+      "fields": [
+        { "key": "cta_text", "label": "Texto do botão", "type": "text" },
+        { "key": "cta_link", "label": "Link", "type": "link" },
+        { "key": "cta_bg", "label": "Cor da faixa", "type": "color", "default": "#0006B3" },
+        { "key": "cta_split_img", "label": "Faixa divisória (CDN)", "type": "text", "default": "__CDN__cis-btn-split.png" },
+        { "key": "cta_btn_bg", "label": "Cor do botão", "type": "color", "default": "#FFC400" },
+        { "key": "cta_btn_color", "label": "Cor do texto", "type": "color", "default": "#000000" }
+      ]
+    },
+    "list-check": {
+      "label": "Lista com imagem lateral", "category": "conteudo",
+      "slots": [{ "key": "slot_img_palco", "recommended": "468x514 (2x)" }],
+      "fields": [
+        { "key": "palco_src", "label": "Imagem", "type": "image" },
+        { "key": "palco_alt", "label": "Texto alternativo da imagem", "type": "text" },
+        { "key": "lc_heading", "label": "Título", "type": "richhtml" },
+        { "key": "lc_heading_color", "label": "Cor do título", "type": "color", "default": "#2D2D2D" },
+        { "key": "lc_icon_bg", "label": "Cor do ícone", "type": "color", "default": "#FF0000" },
+        { "key": "bullet_1", "label": "Item 1", "type": "text" },
+        { "key": "bullet_2", "label": "Item 2", "type": "text" },
+        { "key": "bullet_3", "label": "Item 3", "type": "text" }
+      ]
+    },
+    "heading": {
+      "label": "Título centralizado", "category": "conteudo",
+      "fields": [
+        { "key": "heading_text", "label": "Texto", "type": "richhtml" },
+        { "key": "heading_color", "label": "Cor", "type": "color", "default": "#2D2D2D" },
+        { "key": "heading_size", "label": "Tamanho (px)", "type": "number", "default": "23" },
+        { "key": "heading_lh", "label": "Altura de linha (px)", "type": "number", "default": "30" },
+        { "key": "heading_pad", "label": "Espaçamento (CSS padding)", "type": "text", "default": "36px 48px 40px 48px" }
+      ]
+    },
+    "pillars": {
+      "label": "3 pilares (ícones)", "category": "conteudo",
+      "slots": [
+        { "key": "slot_icone_1", "recommended": "148x148 (círculo embutido)" },
+        { "key": "slot_icone_2", "recommended": "148x148 (círculo embutido)" },
+        { "key": "slot_icone_3", "recommended": "148x148 (círculo embutido)" }
+      ],
+      "fields": [
+        { "key": "icone_1_src", "label": "Ícone 1", "type": "image" },
+        { "key": "pilar_1_title", "label": "Título 1", "type": "text" },
+        { "key": "pilar_1_desc", "label": "Descrição 1", "type": "textarea" },
+        { "key": "icone_2_src", "label": "Ícone 2", "type": "image" },
+        { "key": "pilar_2_title", "label": "Título 2", "type": "text" },
+        { "key": "pilar_2_desc", "label": "Descrição 2", "type": "textarea" },
+        { "key": "icone_3_src", "label": "Ícone 3", "type": "image" },
+        { "key": "pilar_3_title", "label": "Título 3", "type": "text" },
+        { "key": "pilar_3_desc", "label": "Descrição 3", "type": "textarea" }
+      ]
+    },
+    "social-proof": {
+      "label": "Prova social (card azul)", "category": "prova",
+      "slots": [{ "key": "slot_img_publico", "recommended": "504x336 (3:2)" }],
+      "fields": [
+        { "key": "sp_number", "label": "Número em destaque", "type": "text" },
+        { "key": "sp_number_color", "label": "Cor do número", "type": "color", "default": "#FFC400" },
+        { "key": "sp_text", "label": "Texto", "type": "richhtml" },
+        { "key": "sp_card_bg", "label": "Cor do card", "type": "color", "default": "#000FAE" },
+        { "key": "publico_src", "label": "Imagem", "type": "image" },
+        { "key": "publico_alt", "label": "Texto alternativo da imagem", "type": "text" }
+      ]
+    },
+    "payment": {
+      "label": "Escolha de pagamento (2 cards)", "category": "conversao",
+      "fields": [
+        { "key": "pay_heading", "label": "Título da seção", "type": "text" },
+        { "key": "pay_heading_color", "label": "Cor do título", "type": "color", "default": "#2D2D2D" },
+        { "key": "pay_card_bg", "label": "Cor dos cards", "type": "color", "default": "#EFEFEF" },
+        { "key": "pay_title_color", "label": "Cor dos títulos dos cards", "type": "color", "default": "#0F0094" },
+        { "key": "pay_left_title", "label": "Card esquerdo: título", "type": "text" },
+        { "key": "pay_left_desc", "label": "Card esquerdo: descrição", "type": "text" },
+        { "key": "pay_left_btn", "label": "Card esquerdo: texto do botão", "type": "text" },
+        { "key": "pay_left_link", "label": "Card esquerdo: link", "type": "link" },
+        { "key": "pay_left_btn_bg", "label": "Card esquerdo: cor do botão", "type": "color", "default": "#FFC400" },
+        { "key": "pay_left_btn_color", "label": "Card esquerdo: cor do texto", "type": "color", "default": "#000000" },
+        { "key": "pay_right_title", "label": "Card direito: título", "type": "text" },
+        { "key": "pay_right_desc", "label": "Card direito: descrição", "type": "text" },
+        { "key": "pay_right_btn", "label": "Card direito: texto do botão", "type": "text" },
+        { "key": "pay_right_link", "label": "Card direito: link", "type": "link" },
+        { "key": "pay_right_btn_bg", "label": "Card direito: cor do botão", "type": "color", "default": "#2440FF" },
+        { "key": "pay_right_btn_color", "label": "Card direito: cor do texto", "type": "color", "default": "#FFFFFF" }
+      ]
+    },
+    "whatsapp": {
+      "label": "Faixa WhatsApp", "category": "rodape",
+      "slots": [{ "key": "slot_icone_zap", "recommended": "64x64" }],
+      "fields": [
+        { "key": "wa_before", "label": "Texto antes do link", "type": "text" },
+        { "key": "wa_link_text", "label": "Texto do link", "type": "text" },
+        { "key": "wa_link", "label": "Link do WhatsApp", "type": "link" },
+        { "key": "wa_after", "label": "Texto depois do link", "type": "text", "default": "." },
+        { "key": "wa_bar_bg", "label": "Cor da faixa", "type": "color", "default": "#F1F1F1" },
+        { "key": "zap_src", "label": "Ícone", "type": "image" }
+      ]
+    },
+    "signature": {
+      "label": "Assinatura", "category": "rodape",
+      "fields": [
+        { "key": "sig_greeting", "label": "Saudação", "type": "text" },
+        { "key": "sig_name", "label": "Nome", "type": "text" },
+        { "key": "sig_phrase", "label": "Frase de fecho", "type": "text" }
+      ]
+    }
+  }
+}

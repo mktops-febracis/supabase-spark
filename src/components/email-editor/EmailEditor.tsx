@@ -5,6 +5,7 @@ import { BlockEditor } from "./BlockEditor";
 import { Preview } from "./Preview";
 import { ExportPanel } from "./ExportPanel";
 import { CloudPresets } from "./CloudPresets";
+import { AdminUsers } from "@/components/auth/AdminUsers";
 import { useAuth } from "@/lib/auth";
 import {
   CDN_KEY,
@@ -209,6 +210,7 @@ export function EmailEditor() {
 
           <span className="mx-1 h-6 w-px self-center bg-border" />
           <CloudPresets preset={preset} onLoad={applyPreset} />
+          <AdminUsers />
 
           {session && (
             <span className="flex items-center gap-2 self-center pl-1">

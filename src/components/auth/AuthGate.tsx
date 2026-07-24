@@ -1,5 +1,8 @@
-// Barreira de login: só renderiza o app para usuários autenticados.
-// Cadastro/login restritos a e-mails @febracis.com.br (UX aqui + trigger no banco).
+// Barreira de acesso:
+//  - sem Supabase configurado → aviso
+//  - sem sessão → login (cadastro/login só @febracis.com.br)
+//  - sessão com papel 'pending' → página "aguarde validação da equipe"
+//  - papel member/superadmin → app
 import { useState, type FormEvent, type ReactNode } from "react";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { useAuth, isAllowedEmail, ALLOWED_EMAIL_DOMAIN } from "@/lib/auth";
@@ -20,19 +23,50 @@ function ConfigMissing() {
         <p className="mt-2 text-sm text-muted-foreground">
           Defina <code className="font-mono">VITE_SUPABASE_URL</code> e{" "}
           <code className="font-mono">VITE_SUPABASE_ANON_KEY</code> nas variáveis de
-          ambiente do projeto (Lovable → Settings → Environment, e um{" "}
-          <code className="font-mono">.env</code> local) e recarregue.
+          ambiente do projeto (Lovable → Settings → Environment) e recarregue.
         </p>
       </div>
     </Centered>
   );
 }
 
+function PendingPage() {
+  const { session, signOut } = useAuth();
+  return (
+    <Centered>
+      <div className="max-w-md rounded-lg border border-border bg-card p-8 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+          <span className="text-xl">⏳</span>
+        </div>
+        <h1 className="mt-4 text-lg font-semibold">Cadastro em análise</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Aguarde a validação da equipe de <strong>Marketing Operations</strong> sobre o
+          seu cadastro. Você receberá acesso assim que uma pessoa responsável aprovar.
+        </p>
+        {session?.user.email && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Conta: {session.user.email}
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={() => signOut()}
+          className="mt-5 rounded-md border border-input bg-background px-4 py-2 text-xs font-medium hover:bg-accent"
+        >
+          Sair
+        </button>
+      </div>
+    </Centered>
+  );
+}
+
 export function AuthGate({ children }: { children: ReactNode }) {
-  const { session, loading } = useAuth();
+  const { session, loading, role, roleLoading } = useAuth();
   if (!isSupabaseConfigured) return <ConfigMissing />;
   if (loading) return <Centered><span className="text-sm text-muted-foreground">Carregando…</span></Centered>;
   if (!session) return <LoginForm />;
+  if (roleLoading) return <Centered><span className="text-sm text-muted-foreground">Carregando…</span></Centered>;
+  if (role !== "member" && role !== "superadmin") return <PendingPage />;
   return <>{children}</>;
 }
 
@@ -65,13 +99,12 @@ function LoginForm() {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
         setInfo(
-          "Cadastro criado. Se a confirmação por e-mail estiver ativa, confirme pelo link enviado; senão já pode entrar.",
+          "Cadastro enviado. Após confirmar o e-mail (se solicitado), seu acesso passa por validação da equipe de Marketing Operations.",
         );
         setMode("signin");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        // onAuthStateChange cuida do resto.
       }
     } catch (err) {
       setError((err as Error).message || "Falha na autenticação.");

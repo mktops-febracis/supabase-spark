@@ -29,8 +29,30 @@ MCP autenticado). Ela cria:
   desative "Confirm email". Caso contrário, cada novo usuário confirma pelo link recebido.
 - (Opcional) Authentication → URL Configuration: ajuste o Site URL para o domínio da Lovable.
 
+## 4. Papéis de acesso e aprovação (migração 0002 + Edge Function)
+Papéis: **superadmin** (gerencia usuários), **member** (usa o editor), **pending**
+(recém-cadastrado, sem acesso). Novo cadastro entra como `pending` e vê a página
+"aguarde validação da equipe de Marketing Operations". Só superadmin aprova/cria/exclui.
+
+1. **Rode a migração** `supabase/migrations/0002_roles.sql` (SQL Editor ou MCP). Ela cria
+   `profiles`, o trigger de papel inicial (allowlist dos 3 superadmins → superadmin, senão
+   pending), os helpers de RLS e restringe presets/exports/storage a membros ativos.
+2. **Deploy da Edge Function** `admin-users` (cria/exclui usuários com service_role):
+   - via MCP: `deploy_edge_function`; ou
+   - via Supabase CLI: `supabase functions deploy admin-users`; ou
+   - pelo dashboard (Edge Functions → New function → cole `supabase/functions/admin-users/index.ts`).
+   O `SUPABASE_SERVICE_ROLE_KEY` já é injetado no runtime da função — não precisa configurar.
+3. **Bootstrap dos 3 superadmins** (allowlist já garante o papel):
+   - Recomendado: desative "Confirm email" e peça para os 3 se **cadastrarem** no app com a
+     senha deles — o trigger já os marca como `superadmin`; ou
+   - crie-os no dashboard (Authentication → Add user, auto-confirm) / via MCP admin API.
+
+Superadmins: `dayvisonconceicao@`, `raphaelalmeida@`, `felipemelare@` `febracis.com.br`
+(defina a senha na criação — senhas nunca ficam no repositório).
+
 ## Como usar
-- **Entrar/Cadastrar**: só e-mails `@febracis.com.br`.
-- **Salvar na nuvem / Abrir da nuvem**: presets compartilhados pela equipe.
+- **Entrar/Cadastrar**: só e-mails `@febracis.com.br`. Novo cadastro fica `pending` até aprovação.
+- **Usuários** (só superadmin, no header): aprovar pendentes, criar/excluir, promover/rebaixar.
+- **Salvar na nuvem / Abrir da nuvem**: presets compartilhados pela equipe (membros ativos).
 - **Enviar imagem** (campo de imagem): sobe pro bucket e preenche a URL pública.
 - **Salvar exportação na nuvem**: guarda a HTML final MC-safe com o modo usado.

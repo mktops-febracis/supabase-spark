@@ -2,9 +2,13 @@
 // imagens para o Storage. Todas exigem usuário autenticado (RLS no banco).
 import { supabase } from "./supabase";
 import type { Preset } from "./engine";
+import type { EmailDoc } from "./doc-model";
 
 function client() {
-  if (!supabase) throw new Error("Supabase não configurado (faltam VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).");
+  if (!supabase)
+    throw new Error(
+      "Supabase não configurado (faltam VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY).",
+    );
   return supabase;
 }
 
@@ -47,10 +51,7 @@ export async function savePreset(name: string, preset: Preset): Promise<SavedPre
 }
 
 export async function updatePreset(id: string, name: string, preset: Preset): Promise<void> {
-  const { error } = await client()
-    .from("email_presets")
-    .update({ name, preset })
-    .eq("id", id);
+  const { error } = await client().from("email_presets").update({ name, preset }).eq("id", id);
   if (error) throw error;
 }
 
@@ -58,6 +59,42 @@ export async function deletePreset(id: string): Promise<void> {
   const { error } = await client().from("email_presets").delete().eq("id", id);
   if (error) throw error;
 }
+
+// ---- Documentos do editor composável (EmailDoc v2, mesma tabela) -----------
+
+export interface SavedDoc {
+  id: string;
+  name: string;
+  preset: EmailDoc;
+  created_at: string;
+  updated_at: string;
+}
+
+export async function listDocs(): Promise<SavedDoc[]> {
+  const { data, error } = await client()
+    .from("email_presets")
+    .select("id,name,preset,created_at,updated_at")
+    .order("updated_at", { ascending: false });
+  if (error) throw error;
+  return ((data ?? []) as SavedDoc[]).filter((d) => d.preset && d.preset.version === 2);
+}
+
+export async function saveDoc(name: string, doc: EmailDoc): Promise<SavedDoc> {
+  const { data, error } = await client()
+    .from("email_presets")
+    .insert({ name, preset: doc })
+    .select("id,name,preset,created_at,updated_at")
+    .single();
+  if (error) throw error;
+  return data as SavedDoc;
+}
+
+export async function updateDoc(id: string, name: string, doc: EmailDoc): Promise<void> {
+  const { error } = await client().from("email_presets").update({ name, preset: doc }).eq("id", id);
+  if (error) throw error;
+}
+
+export const deleteDoc = deletePreset;
 
 // ---- Exports (HTML final MC-safe) ------------------------------------------
 
@@ -87,7 +124,11 @@ export async function listExports(): Promise<SavedExport[]> {
 export async function uploadImage(file: File): Promise<string> {
   const c = client();
   const ext = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "");
-  const safe = file.name.replace(/\.[^.]+$/, "").replace(/[^a-z0-9-_]+/gi, "-").slice(0, 40) || "img";
+  const safe =
+    file.name
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-z0-9-_]+/gi, "-")
+      .slice(0, 40) || "img";
   const path = `${Date.now()}-${safe}.${ext}`;
   const { error } = await c.storage.from(BUCKET).upload(path, file, {
     upsert: false,

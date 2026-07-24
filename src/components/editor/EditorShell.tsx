@@ -22,14 +22,20 @@ import {
   Columns2,
   Columns3,
   Square,
+  Moon,
+  Sun,
+  LogOut,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
 import { type EmailDoc, emptyDoc, makeWidget } from "@/lib/doc-model";
 import { renderDoc, validate } from "@/lib/render";
+import { useAuth } from "@/lib/auth";
+import { useTheme } from "@/lib/theme";
+import { AdminUsers } from "@/components/auth/AdminUsers";
 import { useEditorStore } from "./useEditorStore";
 import { EditorCanvas } from "./EditorCanvas";
 import { EditorInspector } from "./EditorInspector";
 import { Palette } from "./Palette";
+import { CloudDocs } from "./CloudDocs";
 
 const DOC_KEY = "febracis-email-builder:doc";
 
@@ -58,6 +64,8 @@ export function EditorShell() {
   const { doc, selectedId } = state;
   const [tab, setTab] = useState<"widgets" | "edit">("widgets");
   const [modal, setModal] = useState<null | "preview" | "export">(null);
+  const { session, signOut } = useAuth();
+  const { theme, toggle: toggleTheme } = useTheme();
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
@@ -228,7 +236,9 @@ export function EditorShell() {
             <Eraser className="h-4 w-4" />
           </button>
           <div className="ml-auto flex items-center gap-2">
-            <span className="text-[10px] text-muted-foreground">
+            <CloudDocs doc={doc} onLoad={(d) => dispatch({ type: "LOAD_DOC", doc: d })} />
+            <span className="mx-0.5 h-6 w-px bg-border" />
+            <span className="hidden text-[10px] text-muted-foreground md:inline">
               {report.sizeKB} KB ·{" "}
               {report.bytesAbove127 === 0 ? "MC-safe ✓" : `${report.bytesAbove127}!`}
             </span>
@@ -237,7 +247,7 @@ export function EditorShell() {
               onClick={() => setModal("preview")}
               className="inline-flex items-center gap-1 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
             >
-              <Eye className="h-3.5 w-3.5" /> Preview real
+              <Eye className="h-3.5 w-3.5" /> Preview
             </button>
             <button
               type="button"
@@ -246,12 +256,26 @@ export function EditorShell() {
             >
               <Download className="h-3.5 w-3.5" /> Exportar
             </button>
-            <Link
-              to="/"
-              className="rounded-md border border-input bg-background px-3 py-1.5 text-xs font-medium hover:bg-accent"
+            <span className="mx-0.5 h-6 w-px bg-border" />
+            <AdminUsers />
+            <button
+              type="button"
+              onClick={toggleTheme}
+              title={theme === "dark" ? "Tema claro" : "Tema escuro (black)"}
+              className="inline-flex items-center justify-center rounded-md border border-input bg-background p-1.5 hover:bg-accent"
             >
-              Clássico
-            </Link>
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+            {session && (
+              <button
+                type="button"
+                onClick={() => signOut()}
+                title={session.user.email ?? "Sair"}
+                className="inline-flex items-center gap-1 rounded-md border border-input bg-background px-2.5 py-1.5 text-xs font-medium hover:bg-accent"
+              >
+                <LogOut className="h-3.5 w-3.5" /> Sair
+              </button>
+            )}
           </div>
         </header>
 

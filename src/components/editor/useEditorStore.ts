@@ -9,7 +9,6 @@ import {
   type WidgetType,
   emptyDoc,
   makeSection,
-  makeWidget,
   uid,
 } from "@/lib/doc-model";
 
@@ -30,11 +29,13 @@ export type EditorAction =
   | { type: "MOVE_SECTION"; id: string; dir: -1 | 1 }
   | { type: "UPDATE_SECTION"; id: string; patch: Partial<Section> }
   | { type: "SET_COLUMNS"; sectionId: string; colCount: 1 | 2 | 3 }
-  | { type: "ADD_WIDGET"; columnId: string; widgetType: WidgetType }
+  | { type: "ADD_WIDGET"; columnId: string; widget: Widget; index?: number; select?: boolean }
   | { type: "UPDATE_WIDGET"; id: string; patch: Partial<Widget> }
   | { type: "REMOVE_WIDGET"; id: string }
   | { type: "DUPLICATE_WIDGET"; id: string }
   | { type: "MOVE_WIDGET"; id: string; dir: -1 | 1 }
+  | { type: "REORDER_IN_COLUMN"; columnId: string; activeId: string; overId: string }
+  | { type: "MOVE_WIDGET_TO_COLUMN"; widgetId: string; toColumnId: string; index?: number }
   | { type: "UNDO" }
   | { type: "REDO" };
 
@@ -102,12 +103,47 @@ function reduceDoc(doc: EmailDoc, action: EditorAction): EmailDoc {
 
     case "ADD_WIDGET":
       return mapSections(doc, (s) =>
-        mapColumns(s, (c) =>
-          c.id === action.columnId
-            ? { ...c, widgets: [...c.widgets, makeWidget(action.widgetType)] }
-            : c,
-        ),
+        mapColumns(s, (c) => {
+          if (c.id !== action.columnId) return c;
+          const widgets = c.widgets.slice();
+          const at = action.index == null ? widgets.length : action.index;
+          widgets.splice(at, 0, action.widget);
+          return { ...c, widgets };
+        }),
       );
+
+    case "REORDER_IN_COLUMN":
+      return mapSections(doc, (s) =>
+        mapColumns(s, (c) => {
+          if (c.id !== action.columnId) return c;
+          const from = c.widgets.findIndex((w) => w.id === action.activeId);
+          const to = c.widgets.findIndex((w) => w.id === action.overId);
+          if (from < 0 || to < 0) return c;
+          const widgets = c.widgets.slice();
+          const [it] = widgets.splice(from, 1);
+          widgets.splice(to, 0, it);
+          return { ...c, widgets };
+        }),
+      );
+
+    case "MOVE_WIDGET_TO_COLUMN": {
+      const loc = findColumnOfWidget(doc, action.widgetId);
+      if (!loc || loc.col.id === action.toColumnId) return doc;
+      const w = loc.col.widgets.find((x) => x.id === action.widgetId)!;
+      return mapSections(doc, (s) =>
+        mapColumns(s, (c) => {
+          if (c.id === loc.col.id)
+            return { ...c, widgets: c.widgets.filter((x) => x.id !== action.widgetId) };
+          if (c.id === action.toColumnId) {
+            const widgets = c.widgets.slice();
+            const at = action.index == null ? widgets.length : action.index;
+            widgets.splice(at, 0, w);
+            return { ...c, widgets };
+          }
+          return c;
+        }),
+      );
+    }
 
     case "UPDATE_WIDGET":
       return mapSections(doc, (s) =>
@@ -165,6 +201,8 @@ const HISTORY_ACTIONS = new Set([
   "REMOVE_WIDGET",
   "DUPLICATE_WIDGET",
   "MOVE_WIDGET",
+  "REORDER_IN_COLUMN",
+  "MOVE_WIDGET_TO_COLUMN",
 ]);
 
 function reducer(state: EditorState, action: EditorAction): EditorState {
@@ -198,15 +236,18 @@ function reducer(state: EditorState, action: EditorAction): EditorState {
     default: {
       const doc = reduceDoc(state.doc, action);
       if (doc === state.doc) return state;
+      const selectedId =
+        action.type === "ADD_WIDGET" && action.select ? action.widget.id : state.selectedId;
       if (HISTORY_ACTIONS.has(action.type)) {
         return {
           ...state,
           doc,
+          selectedId,
           past: [...state.past, state.doc].slice(-50),
           future: [],
         };
       }
-      return { ...state, doc };
+      return { ...state, doc, selectedId };
     }
   }
 }
